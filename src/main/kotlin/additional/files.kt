@@ -2,7 +2,7 @@ package org.example.additional
 
 import java.io.File
 
-const val PATH = "words.txt"
+const val DICTIONARY_FILE_PATH = "words.txt"
 
 data class Word(
     val original: String,
@@ -12,7 +12,7 @@ data class Word(
 
 fun main() {
 
-    val dictionary = loadDictionary(PATH)
+    val dictionary = loadDictionary(DICTIONARY_FILE_PATH)
 
     while (true) {
         println("Меню:")

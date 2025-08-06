@@ -37,8 +37,8 @@ fun main() {
                     }.size
                     val totalWords = dictionary.size
                     if (!dictionary.isEmpty()) {
-                    	val percentLearnedWords = (learnedWordsCount.toDouble() / dictionary.size * PERCENT_SCALE).toInt()
-                    	println("Выучено $learnedWordsCount из $totalWords слов | $percentLearnedWords%\n")
+                 val percentLearnedWords = (learnedWordsCount.toDouble() / dictionary.size * PERCENT_SCALE).toInt()
+                 println("Выучено $learnedWordsCount из $totalWords слов | $percentLearnedWords%\n")
                     } else println("Словарь пустой\n")    
                 }
             0 -> return

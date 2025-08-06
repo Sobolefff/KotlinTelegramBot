@@ -1,3 +1,5 @@
+package org.example.additional
+
 import java.io.File
 
 const val DICTIONARY_FILE_PATH = "words.txt"

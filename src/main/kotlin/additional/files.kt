@@ -1,5 +1,3 @@
-package org.example.additional
-
 import java.io.File
 
 const val DICTIONARY_FILE_PATH = "words.txt"
@@ -31,10 +29,10 @@ fun main() {
         when (readlnOrNull()?.toInt()) {
             1 -> println("Вы выбрали пункт \"учить слова\"")
             2 -> {
-                	println("Вы выбрали пункт \"статистика\"")
-                	val learnedWordsCount = dictionary.filter {
-                    	it.correctAnswersCount >= 3
-                	}.size
+                    println("Вы выбрали пункт \"статистика\"")
+                    val learnedWordsCount = dictionary.filter {
+                        it.correctAnswersCount >= 3
+                    }.size
                     val totalWords = dictionary.size
                     if (!dictionary.isEmpty()) {
                     	val percentLearnedWords = (learnedWordsCount.toDouble() / dictionary.size * PERCENT_SCALE).toInt()

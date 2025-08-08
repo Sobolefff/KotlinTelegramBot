@@ -4,6 +4,7 @@ import java.io.File
 
 const val DICTIONARY_FILE_PATH = "words.txt"
 const val PERCENT_SCALE = 100
+const val MINIMAL_CORRECT_ANSWERS_COUNT = 3
 
 data class Word(
     val original: String,
@@ -33,10 +34,10 @@ fun main() {
             2 -> {
                     println("Вы выбрали пункт \"статистика\"")
                     val learnedWordsCount = dictionary.filter {
-                        it.correctAnswersCount >= 3
+                        it.correctAnswersCount >= MINIMAL_CORRECT_ANSWERS_COUNT
                     }.size
                     val totalWords = dictionary.size
-                    if (!dictionary.isEmpty()) {
+                    if (dictionary.isNotEmpty()) {
                         val percentLearnedWords = (learnedWordsCount.toDouble() / dictionary.size * PERCENT_SCALE).toInt()
                         println("Выучено $learnedWordsCount из $totalWords слов | $percentLearnedWords%\n")
                     } else println("Словарь пустой\n")    

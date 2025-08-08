@@ -75,7 +75,7 @@ fun getStatistics(dictionary: List<Word>) {
 }
 
 fun goLearn(dictionary: List<Word>) {
-    println("Вы выбрали пункт \"учить слова\"\n")
+
     while (true) {
 
         val notLearnedList = dictionary.filter { it.correctAnswersCount < MINIMAL_CORRECT_ANSWERS_COUNT }
@@ -85,30 +85,41 @@ fun goLearn(dictionary: List<Word>) {
         }
         val questionWords = notLearnedList.shuffled().take(4)
         val correctAnswer = questionWords.random()
-        println("${correctAnswer.original}:")
-        val answers = questionWords.map { it.translate }.shuffled()
+        val correctAnswerIndex = questionWords.indexOf(correctAnswer)
+        println("\n${correctAnswer.original}:")
 
-        for (i in answers.indices) {
-            println(" ${i + 1} - ${answers[i]}")
+        for (i in questionWords.indices) {
+            println(" ${i + 1} - ${questionWords[i].translate}")
         }
+        println("""
+            -------------
+             0 - Меню
+        """.trimIndent())
 
-        print("\nВведите номер ответа или \"exit\" для выхода в меню: ")
-        val input = readlnOrNull()
+        print("\nВведите номер ответа: ")
+        val userAnswerInput = readln().toIntOrNull()
 
-        if (input == "exit") return
+        if (userAnswerInput == 0) return
 
-        if (input?.toIntOrNull() !in 1..answers.size || input?.toIntOrNull() == null) {
-            println("Введите число от 1 до ${answers.size}\n")
+        if (userAnswerInput !in 1..questionWords.size || userAnswerInput == null) {
+            println("Введите число от 1 до ${questionWords.size}")
             continue
         }
 
-        if (answers[input.toIntOrNull()!! - 1] == correctAnswer.translate) {
-            println("Верно!\n")
+        if (userAnswerInput - 1 == correctAnswerIndex) {
+            println("Верно!")
             correctAnswer.correctAnswersCount++
+            saveDictionary(DICTIONARY_FILE_PATH, dictionary)
         } else {
-            println("Неверно! Правильный ответ: ${correctAnswer.translate}\n")
+            println("Неправильно! ${correctAnswer.original} это ${correctAnswer.translate}")
         }
 
     }
 
+}
+
+fun saveDictionary(path: String, dictionary: List<Word>) {
+    File(path).writeText(
+        dictionary.joinToString("\n") {"${it.original}|${it.translate}|${it.correctAnswersCount}"}
+    )
 }

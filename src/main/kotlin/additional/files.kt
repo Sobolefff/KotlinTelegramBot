@@ -17,7 +17,7 @@ fun main() {
     val dictionary = loadDictionary(DICTIONARY_FILE_PATH)
 
     while (true) {
-        println("Меню:")
+        println("\nМеню:")
         println(
             """
             ---------------
@@ -25,23 +25,12 @@ fun main() {
             2 - Статистика
             0 - Выход
             ---------------
-            
         """.trimIndent()
         )
-        print("Введите номер пункта меню: ")
+        print("\nВведите номер пункта меню: ")
         when (readlnOrNull()?.toInt()) {
-            1 -> println("Вы выбрали пункт \"учить слова\"")
-            2 -> {
-                    println("Вы выбрали пункт \"статистика\"")
-                    val learnedWordsCount = dictionary.filter {
-                        it.correctAnswersCount >= MINIMAL_CORRECT_ANSWERS_COUNT
-                    }.size
-                    val totalWords = dictionary.size
-                    if (dictionary.isNotEmpty()) {
-                        val percentLearnedWords = (learnedWordsCount.toDouble() / dictionary.size * PERCENT_SCALE).toInt()
-                        println("Выучено $learnedWordsCount из $totalWords слов | $percentLearnedWords%\n")
-                    } else println("Словарь пустой\n")    
-                }
+            1 -> goLearn(dictionary)
+            2 -> getStatistics(dictionary)
             0 -> return
             else -> println("Неверный пункт меню, введите 1, 2 или 0\n")
         }
@@ -65,5 +54,61 @@ fun loadDictionary(path: String): List<Word> {
     }
 
     return result
+
+}
+
+fun getStatistics(dictionary: List<Word>) {
+
+    println("Вы выбрали пункт \"статистика\"")
+
+    val learnedWordsCount = dictionary.filter {
+        it.correctAnswersCount >= MINIMAL_CORRECT_ANSWERS_COUNT
+    }.size
+
+    val totalWords = dictionary.size
+
+    return if (dictionary.isNotEmpty()) {
+        val percentLearnedWords = (learnedWordsCount.toDouble() / dictionary.size * PERCENT_SCALE).toInt()
+        println("Выучено $learnedWordsCount из $totalWords слов | $percentLearnedWords%\n")
+    } else println("Словарь пустой\n")
+
+}
+
+fun goLearn(dictionary: List<Word>) {
+    println("Вы выбрали пункт \"учить слова\"\n")
+    while (true) {
+
+        val notLearnedList = dictionary.filter { it.correctAnswersCount < MINIMAL_CORRECT_ANSWERS_COUNT }
+        if (notLearnedList.isEmpty()) {
+            println("Все слова в словаре выучены")
+            return
+        }
+        val questionWords = notLearnedList.shuffled().take(4)
+        val correctAnswer = questionWords.random()
+        println("${correctAnswer.original}:")
+        val answers = questionWords.map { it.translate }.shuffled()
+
+        for (i in answers.indices) {
+            println(" ${i + 1} - ${answers[i]}")
+        }
+
+        print("\nВведите номер ответа или \"exit\" для выхода в меню: ")
+        val input = readlnOrNull()
+
+        if (input == "exit") return
+
+        if (input?.toIntOrNull() !in 1..answers.size || input?.toIntOrNull() == null) {
+            println("Введите число от 1 до ${answers.size}\n")
+            continue
+        }
+
+        if (answers[input.toIntOrNull()!! - 1] == correctAnswer.translate) {
+            println("Верно!\n")
+            correctAnswer.correctAnswersCount++
+        } else {
+            println("Неверно! Правильный ответ: ${correctAnswer.translate}\n")
+        }
+
+    }
 
 }

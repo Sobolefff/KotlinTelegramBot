@@ -5,6 +5,7 @@ import java.io.File
 const val DICTIONARY_FILE_PATH = "words.txt"
 const val PERCENT_SCALE = 100
 const val MINIMAL_CORRECT_ANSWERS_COUNT = 3
+const val ANSWER_OPTIONS_COUNT = 4
 
 data class Word(
     val original: String,
@@ -83,7 +84,7 @@ fun goLearn(dictionary: List<Word>) {
             println("Все слова в словаре выучены")
             return
         }
-        val questionWords = notLearnedList.shuffled().take(4)
+        val questionWords = notLearnedList.shuffled().take(ANSWER_OPTIONS_COUNT)
         val correctAnswer = questionWords.random()
         val correctAnswerIndex = questionWords.indexOf(correctAnswer)
         println("\n${correctAnswer.original}:")
@@ -102,7 +103,7 @@ fun goLearn(dictionary: List<Word>) {
         if (userAnswerInput == 0) return
 
         if (userAnswerInput !in 1..questionWords.size || userAnswerInput == null) {
-            println("Введите число от 1 до ${questionWords.size}")
+            println("Неправильный ввод! Введите число от 1 до $ANSWER_OPTIONS_COUNT или 0 для выхода в меню")
             continue
         }
 

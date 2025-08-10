@@ -1,6 +1,7 @@
 package org.example.additional
 
 import java.io.File
+import java.nio.charset.StandardCharsets
 
 const val DICTIONARY_FILE_PATH = "words.txt"
 const val PERCENT_SCALE = 100
@@ -41,17 +42,19 @@ fun main() {
 
 fun loadDictionary(path: String): List<Word> {
 
-    val wordsFile = File(path)
     val result = mutableListOf<Word>()
 
-    for (i in wordsFile.readLines()) {
-        val line = i.split("|")
-        val word = Word(
-            original = line[0],
-            translate = line[1],
-            correctAnswersCount = line.getOrNull(2)?.toInt() ?: 0,
-        )
-        result.add(word)
+    File(path).bufferedReader().useLines { lines ->
+        lines.forEach { line ->
+            val parts = line.split("|")
+            result.add(
+                Word(
+                    original = parts[0],
+                    translate = parts[1],
+                    correctAnswersCount = parts.getOrNull(2)?.toInt() ?: 0,
+                )
+            )
+        }
     }
 
     return result
@@ -92,10 +95,12 @@ fun goLearn(dictionary: List<Word>) {
         for (i in questionWords.indices) {
             println(" ${i + 1} - ${questionWords[i].translate}")
         }
-        println("""
+        println(
+            """
             -------------
              0 - Меню
-        """.trimIndent())
+        """.trimIndent()
+        )
 
         print("\nВведите номер ответа: ")
         val userAnswerInput = readln().toIntOrNull()
@@ -120,7 +125,10 @@ fun goLearn(dictionary: List<Word>) {
 }
 
 fun saveDictionary(path: String, dictionary: List<Word>) {
-    File(path).writeText(
-        dictionary.joinToString("\n") {"${it.original}|${it.translate}|${it.correctAnswersCount}"}
-    )
+    File(path).outputStream().buffered().use { output ->
+        for (word in dictionary) {
+            val line = "${word.original}|${word.translate}|${word.correctAnswersCount}\n"
+            output.write(line.toByteArray(StandardCharsets.UTF_8))
+        }
+    }
 }

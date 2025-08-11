@@ -1,4 +1,22 @@
-hello|привет|0
-dog|собака|0
-cat|кошка|0
-thank you|спасибо
+hello|привет|1
+dog|собака|1
+cat|кошка|3
+thank you|спасибо|2
+goodbye|до свидания|3
+please|пожалуйста|3
+friend|друг|2
+food|еда|0
+water|вода|3
+house|дом|2
+car|машина|2
+school|школа|2
+teacher|учитель|2
+book|книга|0
+pen|ручка|3
+phone|телефон|1
+computer|компьютер|3
+city|город|3
+country|страна|0
+work|работа|2
+money|деньги|2
+love|любовь|1

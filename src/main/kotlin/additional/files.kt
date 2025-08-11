@@ -90,7 +90,7 @@ fun goLearn(dictionary: List<Word>) {
         val questionWords = notLearnedList.shuffled().take(ANSWER_OPTIONS_COUNT)
         val correctAnswer = questionWords.random()
         val correctAnswerIndex = questionWords.indexOf(correctAnswer)
-        println("\n${correctAnswer.original}:")
+        println("\n${correctAnswer.original}: ")
 
         for (i in questionWords.indices) {
             println(" ${i + 1} - ${questionWords[i].translate}")
@@ -103,21 +103,24 @@ fun goLearn(dictionary: List<Word>) {
         )
 
         print("\nВведите номер ответа: ")
-        val userAnswerInput = readln().toIntOrNull()
+        when (val userAnswerInput = readln().toIntOrNull()) {
+            0 -> return // выход в меню
 
-        if (userAnswerInput == 0) return
+            in 1..ANSWER_OPTIONS_COUNT -> {
+                if (userAnswerInput != null) {
+                    if (userAnswerInput - 1 == correctAnswerIndex) {
+                        println("Верно!")
+                        correctAnswer.correctAnswersCount++
+                        saveDictionary(DICTIONARY_FILE_PATH, dictionary)
+                    } else {
+                        println("Неправильно! ${correctAnswer.original} это ${correctAnswer.translate}")
+                    }
+                }
+            }
 
-        if (userAnswerInput !in 1..questionWords.size || userAnswerInput == null) {
-            println("Неправильный ввод! Введите число от 1 до $ANSWER_OPTIONS_COUNT или 0 для выхода в меню")
-            continue
-        }
-
-        if (userAnswerInput - 1 == correctAnswerIndex) {
-            println("Верно!")
-            correctAnswer.correctAnswersCount++
-            saveDictionary(DICTIONARY_FILE_PATH, dictionary)
-        } else {
-            println("Неправильно! ${correctAnswer.original} это ${correctAnswer.translate}")
+            else -> {
+                println("Неправильный ввод! Введите число от 1 до $ANSWER_OPTIONS_COUNT или 0 для выхода в меню")
+            }
         }
 
     }

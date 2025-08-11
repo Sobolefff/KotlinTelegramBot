@@ -90,7 +90,7 @@ fun goLearn(dictionary: List<Word>) {
         val questionWords = notLearnedList.shuffled().take(ANSWER_OPTIONS_COUNT)
         val correctAnswer = questionWords.random()
         val correctAnswerIndex = questionWords.indexOf(correctAnswer)
-        println("\n${correctAnswer.original}:")
+        println("\n${correctAnswer.original}: ")
 
         for (i in questionWords.indices) {
             println(" ${i + 1} - ${questionWords[i].translate}")
